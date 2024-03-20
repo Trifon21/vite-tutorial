@@ -1,35 +1,93 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import styles from './App.module.scss'
+import {Details} from "./Details.jsx";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 
-function App() {
-  const [count, setCount] = useState(0)
+const MENU = [
+    {
+        name: 'Home',
+        link: '/'
+    },
+    {
+        name: 'Products',
+        link: '/products'
+    }
+]
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+const isAuth = true;
+const role = 'admin'
+
+
+export function App(){
+
+    const [details, setDetails] = useState({
+        isLoading : true,
+        title: 'useEffect',
+        description: 'Hello',
+        buttonText: 'Click',
+        count: 0
+    })
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            setDetails(prev => ({ ...prev, isLoading: false}))
+        }, 1000);
+
+        return () => {
+            clearTimeout(timeout)
+        }
+    }, []);
+
+    useEffect(() => {
+        setDetails(prev => ({
+            ...prev,
+           count: prev.count + 1,
+           description: 'title has changed ' + prev.count + ' raz',
+        }))
+    }, [details.title]);
+
+    const imageRef = useRef(null);
+
+    const onClick = () => {
+        if (!imageRef.current) return;
+
+        imageRef.current.style.borderRadius = '20px'
+        imageRef.current.style.boxShadow = '0 3px 6px rgba(0,0,0, .5)'
+    }
+
+    const [count, setCount] = useState(0);
+    const [multiplier, setMultiplier] = useState(10);
+    const result = useMemo(() => {
+        return count * multiplier;
+    }, [count, multiplier])
+
+    const handleLoading = useCallback(() => {
+        setDetails(prev => ({...prev, isLoading: !prev.isLoading}))
+    }, [])
+
+    return <div className={styles.layout}>
+        <img ref={imageRef} src='/email.png' width={200} alt='/email.png'/>
+
+        <br/>
+
+         <button onClick={onClick}>Change Image</button>
+
+        <div> Результат: {result}</div>
+        <button onClick={() => setCount(prev => prev + 1)}>Увеличить счётчик</button>
+        <button onClick={() => setMultiplier(prev => prev + 10)}>Увеличить множитель</button>
+
+        <div>
+        {
+            MENU.map(item => (<span key={item.link}>{item.name}</span>))
+        }
+        </div>
+
+        <div>{isAuth ? 'Авторизирован' : (role === 'admin' ? 'Admin' : 'Войдите в систему!')}</div>
+
+        {details.isLoading && <p>Loading...</p>}
+        <Details
+            details={details}
+            setDetails={setDetails}
+            handleLoading={handleLoading}
+        />
+    </div>
 }
-
-export default App
