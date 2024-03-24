@@ -1,6 +1,8 @@
 import styles from './App.module.scss'
 import {Details} from "./Details.jsx";
 import {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import Header from "./Header.jsx";
+import {useAuth} from "./hooks/usAuth.js";
 
 const MENU = [
     {
@@ -18,6 +20,7 @@ const role = 'admin'
 
 
 export function App(){
+    const {isLoggedIn, setIsLoggedIn} = useAuth();
 
     const [details, setDetails] = useState({
         isLoading : true,
@@ -89,5 +92,19 @@ export function App(){
             setDetails={setDetails}
             handleLoading={handleLoading}
         />
+
+        <div>
+            <Header/>
+            <br/>
+            {
+                isLoggedIn ?
+                    <button onClick={() => setIsLoggedIn(false)}>
+                        Выйти из системы
+                    </button> :
+                    <button onClick={() => setIsLoggedIn(true)}>
+                        Войти
+                    </button>
+            }
+        </div>
     </div>
 }
