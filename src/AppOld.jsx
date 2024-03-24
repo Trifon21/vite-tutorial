@@ -1,8 +1,8 @@
 import styles from './App.module.scss'
-import {Details} from "./Details.jsx";
+import {Details} from "./Details.tsx";
 import {useCallback, useEffect, useMemo, useRef, useState} from "react";
-import Header from "./Header.jsx";
-import {useAuth} from "./hooks/usAuth.js";
+import Header from "./Header.tsx";
+import {useAuth} from "./hooks/usAuth.ts";
 
 const MENU = [
     {

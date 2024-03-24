@@ -1,9 +1,10 @@
 import {useEffect, useState} from 'react';
 import styles from './App.module.scss'
 import {Link, useNavigate} from "react-router-dom";
+import {ITodo} from "./types.ts";
 
 function App() {
-    const [todos, setTodos] = useState([]);
+    const [todos, setTodos] = useState<ITodo[]>([]);
 
     useEffect(() => {
         const fetchData = async()=>{
